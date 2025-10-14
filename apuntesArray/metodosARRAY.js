@@ -16,7 +16,7 @@ const producto3={
     precio:30
 }
 
-//metodo foreach-> no devuelve nada
+//metodo foreach-> no devuelve nada----
 
 const carrito=[
     producto1,
