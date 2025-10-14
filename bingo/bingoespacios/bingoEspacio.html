@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bingo sencillo</title>
+  <style>
+    .carton {
+      margin: 10px;
+      padding: 10px;
+      border: 2px solid black;
+      display: inline-block;
+      font-family: monospace;
+    }
+    .linea {
+      display: flex;
+      justify-content: space-between;
+    }
+    .casilla {
+      width: 35px;
+      height: 30px;
+      border: 1px solid gray;
+      text-align: center;
+      line-height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <button id="btn_generar">🎲 Generar Cartón</button>
+  <div id="cartones"></div>
+
+  <script src="bingo.js"></script>
+</body>
+</html>

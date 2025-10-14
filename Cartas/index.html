@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Memoria DOM</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="controls" aria-label="Controles del juego">
+      <label for="level">Dificultad:</label>
+      <select id="level">
+        <option value="6">Fácil (6 parejas)</option>
+        <option value="8">Medio (8 parejas)</option>
+        <option value="12">Difícil (12 parejas)</option>
+      </select>
+      <button id="start">Iniciar</button>
+    </section>
+
+    <section id="hud" aria-live="polite">
+      <span>Movimientos: <strong id="moves">0</strong></span>
+      <span>Tiempo: <strong id="timer">00:00</strong></span>
+      <span>Parejas: <strong id="pairs">0/0</strong></span>
+    </section>
+
+    <section id="board" role="grid" aria-label="Tablero de memoria"></section>
+  </main>
+
+  <div id="modal" hidden>
+    <!-- TODO: Resultado final y botones de acción -->
+
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
