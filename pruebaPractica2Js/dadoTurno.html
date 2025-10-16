@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .seleccionarImagen {
+
+            border: 5px solid red;
+        }
+    
+    </style>
+
+</head>
+<body>
+
+    <div id="jugada">
+        <h1>Dado</h1>
+
+        <div id="imagenes">
+
+            <img id="jugador1" src="img/cara.png" height="150" alt="">
+            <h3>Jugador1: <span id="cont1">0</span></h3>
+
+            <img id="jugador2" src="img/cruz.png" height="150" alt="">
+            <h3>Jugador2: <span id="cont2">0</span></h3>
+        </div>
+    </div>
+
+     <h3>Jugada actual : <span id="turno">0</span></h3>
+
+    <div>Numero Dado:<span id="dado">0</span> </div>
+
+    
+
+
+     <div><button id="btnjugar">Tirar Dado</button><button id="btnpasar">Pasar Turno</button></div>
+
+    <script src="dadoTurno.js"></script>
+    
+</body>
+</html>
