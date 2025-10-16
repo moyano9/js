@@ -7,6 +7,22 @@ const total2 = document.querySelector("#cont2");
 const totalTurno = document.querySelector("#turno");
 const dado = document.querySelector("#dado");
 
+/*
+
+const divjugador1 = document.querySelector("#jugador1")
+const divjugador2 = document.querySelector("#jugador2")
+const btnjugar = document.querySelector("#btnjugar");
+const btnpasar = document.querySelector("#btnpasar");
+const spantotal1 = document.querySelector("#cont1");
+const spantotal2 = document.querySelector("#cont2");
+const spantotalTurno = document.querySelector("#turno");
+const spandado = document.querySelector("#dado");
+
+usar esa estructura para futuros 
+
+
+*/
+
 
 let ladodado = 0
 
