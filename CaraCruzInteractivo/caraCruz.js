@@ -5,6 +5,12 @@ const racha = document.querySelector("#racha")
 const rachaMax = document.querySelector("#rachaMax")
 const mensaje = document.querySelector("#mensaje")
 const resultado = document.querySelector("#resultado")
+/* para tabla
+
+const tdResultado = document.querySelector("#tdResultado");
+const tdRacha = document.querySelector("#tdRacha");
+const tdRachaMax = document.querySelector("#tdRachaMax");
+*/
 let cont = 0
 let max = 0
 let lado = ""
@@ -18,6 +24,20 @@ function generarLado() {
 
 generarLado();
 
+/*
+tdResultado.textContent = "—";
+tdRacha.textContent = cont;
+tdRachaMax.textContent = max; 
+
+
+function actualizarTabla(resultadoTxt) {
+  if (tdResultado) tdResultado.textContent = resultadoTxt;
+  if (tdRacha) tdRacha.textContent = cont;
+  if (tdRachaMax) tdRachaMax.textContent = max;
+}
+
+*/
+
 
 function jugar(eleccion) {
 
@@ -26,6 +46,9 @@ function jugar(eleccion) {
     racha.textContent = cont
     mensaje.textContent = "✅ ¡Has acertado! Racha: " + cont + " aciertos"
     mensaje.style.color = "green"
+
+    //     actualizarTabla("Has ganado");
+
     if (cont > max) {
 
       max = cont
@@ -37,6 +60,8 @@ function jugar(eleccion) {
     racha.textContent = cont
     mensaje.textContent = "❌ Has fallado. Inténtalo otra vez"
     mensaje.style.color = "red"
+
+    //    actualizarTabla("Has perdido");
   }
 
    // Limpiar el contenido anterior
