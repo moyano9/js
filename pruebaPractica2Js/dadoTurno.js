@@ -58,54 +58,57 @@ btnjugar.addEventListener("click", () => {
 
 
     }
+})
 
-    btnpasar.addEventListener("click", () => {
+btnpasar.addEventListener("click", () => {
 
-        if (jugador1.classList.contains("seleccionarImagen")) {
+    if (jugador1.classList.contains("seleccionarImagen")) {
 
-            jugador1.classList.remove("seleccionarImagen")
-            jugador2.classList.remove("seleccionarImagen")
+        jugador1.classList.remove("seleccionarImagen")
+        jugador2.classList.remove("seleccionarImagen")
 
-            jugador2.classList.add("seleccionarImagen")
+        jugador2.classList.add("seleccionarImagen")
 
-            totalJugador1 += turno;
-            total1.textContent = totalJugador1;
-            turno = 0;
+        totalJugador1 += turno;
+        total1.textContent = totalJugador1;
+        turno = 0;
 
-        }
-        else if(jugador2.classList.contains("seleccionarImagen")) {
+    }
+    else if (jugador2.classList.contains("seleccionarImagen")) {
 
-            jugador1.classList.remove("seleccionarImagen")
-            jugador2.classList.remove("seleccionarImagen")
+        jugador1.classList.remove("seleccionarImagen")
+        jugador2.classList.remove("seleccionarImagen")
 
-            jugador1.classList.add("seleccionarImagen")
-
-
-            totalJugador2 += turno;
-            total2.textContent = totalJugador2;
-
-            turno = 0;
+        jugador1.classList.add("seleccionarImagen")
 
 
-        }
+        totalJugador2 += turno;
+        total2.textContent = totalJugador2;
+
+        turno = 0;
 
 
-    })
+    }
 
-    if(totalJugador1==100){
+    if (totalJugador1 == 100) {
 
         alert("Gana Jugador1")
 
     }
-    else if(totalJugador2==100){
+    else if (totalJugador2 == 100) {
 
         alert("gana jugador2")
     }
 
 
 
-
 })
+
+
+
+
+
+
 
 
 
