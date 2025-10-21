@@ -8,7 +8,7 @@ const matriz = [
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    pintarMatriz();
+    pintarMatriz(matriz);
 
 
 })
