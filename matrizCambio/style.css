@@ -1,0 +1,48 @@
+body {
+  background-color: #0f172a;
+  color: #fde68a;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+h1 {
+  color: #fde68a;
+  text-shadow: 1px 1px 4px black;
+}
+
+.tablero {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 4px;
+  background-color: #2563eb;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.celda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1e3a8a;
+  border: 2px solid #172554;
+  font-size: 28px;
+  color: #fde68a;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.celda:hover {
+  background-color: #334155;
+}
+
+.celda.vacia {
+  background-color: #475569;
+  opacity: 0.5;
+  cursor: default;
+}
