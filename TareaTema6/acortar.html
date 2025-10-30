@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Recortar palabras sin substring</title>
+</head>
+<body>
+  <h2>Recortar palabras sin usar substring()</h2>
+
+  <form id="formRecorte">
+    <label>Lista de palabras:</label>
+    <input type="text" id="palabras" placeholder="Ej: elefante sociedad chocolate avion america"><br><br>
+
+    <label>Caracteres permitidos:</label>
+    <input type="number" id="caracteres" placeholder="Ej: 4"><br><br>
+
+    <button type="submit">Recortar</button>
+  </form>
+
+  <p id="resultado"></p>
+
+  <script>
+    const form = document.getElementById("formRecorte");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const listaPalabras = document.getElementById("palabras").value.trim().split(" ");
+      const cantidad = parseInt(document.getElementById("caracteres").value);
+      let recortadas = [];
+
+      // 🔹 Recorremos cada palabra de la lista
+      listaPalabras.forEach((palabra) => {
+        let recorte = ""; // aquí guardaremos los primeros caracteres
+
+        // 🔹 Recorremos cada letra de la palabra hasta llegar a "cantidad"
+        for (let i = 0; i < cantidad && i < palabra.length; i++) {
+          recorte += palabra[i]; // añadimos letra por letra
+        }
+
+        recortadas.push(recorte);
+      });
+
+      document.getElementById("resultado").textContent =
+        "🔤 Palabras recortadas: " + recortadas.join(" ");
+    });
+
+
+    /*<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Concatenar y partir en N</title>
+</head>
+<body>
+  <h2>Concatenar letras y mostrar de N en N</h2>
+
+  <form id="formChunks">
+    <label>Lista de palabras:</label>
+    <input type="text" id="palabras" placeholder="Ej: elefante sociedad chocolate"><br><br>
+
+    <label>Tamaño del bloque (N):</label>
+    <input type="number" id="n" placeholder="Ej: 6" min="1"><br><br>
+
+    <button type="submit">Procesar</button>
+  </form>
+
+  <p id="resultado"></p>
+
+  <script>
+    const form = document.getElementById("formChunks");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // 1) Normalizamos espacios y concatenamos todas las letras
+      const palabras = document.getElementById("palabras").value.trim().split(/\s+/);
+      const n = parseInt(document.getElementById("n").value);
+      const todoJunto = palabras.join(""); // sin espacios
+
+      // 2) Partimos en bloques de N con forEach sobre los caracteres
+      const chars = Array.from(todoJunto);
+      let actual = "";
+      const bloques = [];
+
+      chars.forEach((ch, i) => {
+        actual += ch;
+        if (actual.length === n) {      // cuando llegamos a N, guardamos
+          bloques.push(actual);
+          actual = "";
+        }
+      });
+
+      if (actual.length > 0) bloques.push(actual); // último bloque si quedó incompleto
+
+      document.getElementById("resultado").textContent = bloques.join(" ");
+    });
+  */
+  </script>
+</body>
+</html>

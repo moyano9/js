@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Comparar listas con forEach</title>
+</head>
+<body>
+  <h2>Comparar dos listas</h2>
+
+  <label>Lista 1:</label>
+  <input type="text" id="lista1" placeholder="Ej: 1 2 3"><br><br>
+
+  <label>Lista 2:</label>
+  <input type="text" id="lista2" placeholder="Ej: 1 2 3"><br><br>
+
+  <button id="btnComparar" type="button">Comparar</button>
+
+  <p id="resultado"></p>
+
+  <script>
+    document.getElementById("btnComparar").addEventListener("click", () => {
+      const lista1 = document.getElementById("lista1").value.trim().split(" ");
+      const lista2 = document.getElementById("lista2").value.trim().split(" ");
+
+      let iguales = true; // asumimos que son iguales hasta que se demuestre lo contrario
+
+      // Si las longitudes no coinciden, no pueden ser iguales
+      if (lista1.length !== lista2.length) {
+        iguales = false;
+      } else {
+        // Recorremos lista1 y comparamos cada elemento con el mismo índice en lista2
+        lista1.forEach((valor, i) => {
+          if (valor !== lista2[i]) {
+            iguales = false;
+          }
+        });
+      }
+
+      const resultado = document.getElementById("resultado");
+      resultado.textContent = iguales
+        ? "✅ Las listas son iguales"
+        : "❌ Las listas no son iguales";
+    });
+
+    /* Con tipo submit un prevent default para no recargar la pagina
+
+     <button type="submit">Comparar</button>
+
+       <p id="resultado"></p>
+
+
+      // 1️⃣ Seleccionamos el formulario
+    const form = document.getElementById("formListas");
+
+    // 2️⃣ Escuchamos el evento submit
+    form.addEventListener("submit", (e) => {
+      e.preventDefault(); // evita que el formulario recargue la página
+
+      // 3️⃣ Obtenemos los valores introducidos y los convertimos en arrays
+      const lista1 = document.getElementById("lista1").value.trim().split(" ");
+      const lista2 = document.getElementById("lista2").value.trim().split(" ");
+
+      // 4️⃣ Asumimos que las listas son iguales al principio
+      let iguales = true;
+
+      // 5️⃣ Si las longitudes son distintas, ya no son iguales
+      if (lista1.length !== lista2.length) {
+        iguales = false;
+      } else {
+        // 6️⃣ Recorremos la primera lista con forEach y comparamos
+        lista1.forEach((valor, i) => {
+          if (valor !== lista2[i]) {
+            iguales = false;
+          }
+        });
+      }
+
+      // 7️⃣ Mostramos el resultado en el párrafo
+      const resultado = document.getElementById("resultado");
+      resultado.textContent = iguales
+        ? "✅ Las listas son iguales"
+        : "❌ Las listas no son iguales";
+    });
+    
+    
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Juego de Memoria 4x4 (comentado y sin bloqueado)</title>
+    <style>
+        /* === Estilos básicos para que se vea en cuadrícula === */
+        body {
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        /* El tablero será una cuadrícula de 4 columnas */
+        .tablero {
+            display: grid;
+            grid-template-columns: repeat(4, 80px);
+            /* 4 columnas de 80px */
+            gap: 10px;
+            /* separación entre cartas */
+            justify-content: center;
+            /* centrado horizontal */
+            margin-top: 20px;
+        }
+
+        /* Cada botón representa una carta */
+        button {
+            width: 80px;
+            height: 80px;
+            font-size: 20px;
+            /* tamaño del número cuando se muestra */
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Juego de Memoria 4x4</h2>
+
+    <!-- 
+    Formulario para introducir los 8 números.
+    Al pulsar "Iniciar", el juego duplica esos números,
+    los baraja y crea las 16 cartas.
+  -->
+    <form id="formulario">
+        <input id="numeros" type="text" placeholder="Ej: 1 2 3 4 5 6 7 8" size="30">
+        <button type="submit">Iniciar</button>
+    </form>
+
+    <!-- Aquí aparecerán mensajes (error o victoria) -->
+    <p id="mensaje"></p>
+
+    <!-- Contadores de estado -->
+    <p>
+        Movimientos: <span id="movimientos">0</span> |
+        Parejas: <span id="parejas">0</span>/8
+    </p>
+
+    <!-- Contenedor donde se crean las 16 cartas -->
+    <div id="tablero" class="tablero"></div>
+
+    <script>
+        // ====== Referencias a los elementos HTML ======
+        const form = document.getElementById("formulario");   // formulario
+        const input = document.getElementById("numeros");     // campo de texto
+        const tablero = document.getElementById("tablero");   // contenedor de cartas
+        const mensaje = document.getElementById("mensaje");   // zona de mensajes
+        const movSpan = document.getElementById("movimientos"); // contador de movimientos
+        const parSpan = document.getElementById("parejas");     // contador de parejas
+
+        // ====== Variables del juego ======
+        let cartas = [];     // array con los 16 valores (8 parejas duplicadas)
+        let primera = null;  // referencia a la primera carta del turno
+        let movimientos = 0; // cuántos intentos se han hecho
+        let parejas = 0;     // cuántas parejas se han encontrado
+
+        // ====== Función: crear el tablero ======
+        function crearTablero() {
+            tablero.innerHTML = ""; // limpia el tablero anterior
+
+            // Recorremos el array "cartas" (16 valores barajados)
+            cartas.forEach((valor) => {
+                const boton = document.createElement("button"); // crea una carta
+                boton.textContent = "";            // texto vacío → carta boca abajo
+                boton.dataset.valor = valor;       // guardamos el número en un atributo oculto
+
+                // Cuando se hace clic, se llama a voltearCarta() con esta carta
+                boton.addEventListener("click", () => voltearCarta(boton));
+
+                // Añadimos la carta al tablero
+                tablero.appendChild(boton);
+            });
+        }
+
+        // ====== Función: voltear una carta (mostrar su valor) ======
+        function voltearCarta(carta) {
+            // Si la carta ya está volteada o desactivada, no hacemos nada
+            if (carta.textContent !== "" || carta.disabled) return;
+
+            // Mostramos el valor guardado
+            carta.textContent = carta.dataset.valor;
+
+            // Si no hay una carta seleccionada aún (primera carta del turno)
+            if (!primera) {
+                primera = carta; // guardamos esta para comparar más tarde
+                return;          // salimos y esperamos el siguiente clic
+            }
+
+            // Si ya hay una primera carta, comparamos con esta segunda
+            const segunda = carta;
+
+            // Contamos este intento como un movimiento
+            movimientos++;
+            movSpan.textContent = movimientos;
+
+            // === Si los valores son iguales → pareja encontrada ===
+            if (primera.dataset.valor === segunda.dataset.valor) {
+                primera.disabled = true; // desactivamos ambas (ya no se pueden clicar)
+                segunda.disabled = true;
+                parejas++;               // sumamos una pareja
+                parSpan.textContent = parejas;
+
+                // Si ya hay 8 parejas, mostramos mensaje de victoria
+                if (parejas === 8) mensaje.textContent = "¡Has ganado!";
+            } else {
+                // === Si los valores son diferentes → se tapan de nuevo ===
+                const carta1 = primera;
+                const carta2 = segunda;
+
+                // Esperamos 600 ms para que el jugador vea los números
+                setTimeout(() => {
+                    carta1.textContent = ""; // volvemos a dejar vacías
+                    carta2.textContent = "";
+                }, 600);
+            }
+
+            // Reiniciamos "primera" para empezar el siguiente intento
+            primera = null;
+        }
+
+        // ====== Evento: cuando se envía el formulario (Iniciar juego) ======
+        form.addEventListener("submit", (e) => {
+            e.preventDefault(); // evita que se recargue la página
+
+            // 1️⃣ Tomamos el texto, quitamos espacios sobrantes y separamos por espacios
+            const valores = input.value.trim().split(/\s+/);
+
+            // 2️⃣ Validamos que haya exactamente 8 números
+            if (valores.length !== 8) {
+                mensaje.textContent = "Debes poner exactamente 8 números separados por espacios.";
+                return; // detenemos el juego si no cumple
+            }
+
+            // 3️⃣ Duplicamos el array para formar parejas (8 → 16)
+            cartas = valores.concat(valores);
+
+            // 4️⃣ Barajamos las cartas de forma simple con sort + Math.random()
+            cartas.sort(() => Math.random() - 0.5);
+
+            // 5️⃣ Reiniciamos variables y contadores
+            movimientos = 0;
+            parejas = 0;
+            movSpan.textContent = 0;
+            parSpan.textContent = 0;
+            mensaje.textContent = "";
+
+            // 6️⃣ Creamos el tablero con las cartas boca abajo
+            crearTablero();
+        });
+        /* con bloqueado
+    
+    
+        let bloqueado = false;  // ← arriba, al inicio
+    
+    if (bloqueado || carta.textContent !== "" || carta.disabled) return; // ← dentro de voltearCarta
+    
+    bloqueado = true; // justo antes de comparar las dos cartas
+    
+    // Y en ambos casos (coinciden o no), al final:
+    bloqueado = false; // cuando termines de tapar o marcar
+        
+        */
+    </script>
+
+</body>
+
+</html>

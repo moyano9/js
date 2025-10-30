@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Matriz 3x3 sin Set</title>
+</head>
+<body>
+  <h2>Comprobar números repetidos en una matriz 3x3 (sin Set)</h2>
+
+  <form id="formMatriz">
+    <label>Introduce 9 números separados por espacio:</label><br>
+    <input type="text" id="numeros" placeholder="Ej: 1 2 3 4 5 6 7 8 9" size="40"><br><br>
+    <button type="submit">Comprobar</button>
+  </form>
+
+  <p id="resultado"></p>
+
+  <script>
+    const form = document.getElementById("formMatriz");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // 1️⃣ Obtener los números
+      const valores = document.getElementById("numeros").value.trim().split(" ").map(Number);
+
+      // 2️⃣ Validar longitud
+      if (valores.length !== 9 || valores.some(isNaN)) {
+        document.getElementById("resultado").textContent = "❌ Debes introducir exactamente 9 números válidos.";
+        return;
+      }
+
+      // 3️⃣ Crear matriz 3x3
+      const matriz = [
+        valores.slice(0, 3),
+        valores.slice(3, 6),
+        valores.slice(6, 9)
+      ];
+
+      /* si queremos hacerlo sin .slice
+      const matriz = [];
+for (let i = 0; i < valores.length; i += 3) {
+  matriz.push([valores[i], valores[i + 1], valores[i + 2]]);
+}
+      
+      */
+
+      let repetido = false;
+
+      // 4️⃣ Comprobar filas (manual)
+      matriz.forEach(fila => {
+        for (let i = 0; i < fila.length; i++) {
+          for (let j = i + 1; j < fila.length; j++) {
+            if (fila[i] === fila[j]) repetido = true;
+          }
+        }
+      });
+
+      // 5️⃣ Comprobar columnas (manual, sin Set)
+      for (let col = 0; col < 3; col++) {
+        const a = matriz[0][col];
+        const b = matriz[1][col];
+        const c = matriz[2][col];
+
+        if (a === b || a === c || b === c) repetido = true;
+      }
+
+      // 6️⃣ Comprobar diagonales (manual)
+      const d1a = matriz[0][0], d1b = matriz[1][1], d1c = matriz[2][2];
+      const d2a = matriz[0][2], d2b = matriz[1][1], d2c = matriz[2][0];
+
+      if (d1a === d1b || d1a === d1c || d1b === d1c) repetido = true;
+      if (d2a === d2b || d2a === d2c || d2b === d2c) repetido = true;
+
+
+      /* Comprobar son set 
+
+       let repetido = false;
+
+      // 4️⃣ Comprobamos filas
+      matriz.forEach((fila, i) => {
+        const setFila = new Set(fila);
+        if (setFila.size < 3) repetido = true;
+      });
+
+      // 5️⃣ Comprobamos columnas
+      for (let col = 0; col < 3; col++) {
+        const columna = [matriz[0][col], matriz[1][col], matriz[2][col]];
+        const setCol = new Set(columna);
+        if (setCol.size < 3) repetido = true;
+      }
+
+      // 6️⃣ Comprobamos diagonales
+      const diag1 = [matriz[0][0], matriz[1][1], matriz[2][2]];
+      const diag2 = [matriz[0][2], matriz[1][1], matriz[2][0]];
+      if (new Set(diag1).size < 3 || new Set(diag2).size < 3) repetido = true;
+      
+      */
+
+      // 7️⃣ Resultado
+      document.getElementById("resultado").textContent = repetido
+        ? "⚠️ Hay números repetidos en una fila, columna o diagonal."
+        : "✅ No hay números repetidos.";
+    });
+  </script>
+</body>
+</html>

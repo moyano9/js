@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscaminas (simple)</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    .tablero { display: grid; gap: 6px; justify-content: center; margin-top: 16px; }
+    .celda {
+      width: 36px; height: 36px; font-size: 16px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .revelada { background: #eee; cursor: default; }
+    .mina { background: #f7c7c7; }
+  </style>
+</head>
+<body>
+
+  <h2>Buscaminas (simple)</h2>
+
+  <form id="form">
+    Filas: <input type="number" id="filas" value="8" min="2" style="width:60px">
+    Columnas: <input type="number" id="cols" value="8" min="2" style="width:60px">
+    Minas: <input type="number" id="minas" value="10" min="1" style="width:60px">
+    <button type="submit">Crear</button>
+  </form>
+
+  <p id="msg"></p>
+  <div id="tablero" class="tablero"></div>
+
+  <script>
+    const form = document.getElementById('form');
+    const tableroEl = document.getElementById('tablero');
+    const msg = document.getElementById('msg');
+
+    // Estado
+    let filas = 8, cols = 8, minas = 10;
+    let campo = [];        // matriz con -1 si mina, o número 0..8
+    let revelada = [];     // matriz booleana de celdas reveladas
+    let totalSinMina = 0;  // cuántas casillas no-mina hay
+    let reveladasOK = 0;   // cuántas casillas no-mina ya se han revelado
+    let juegoTerminado = false;
+
+    // Generar campo: colocar minas y contar adyacentes
+    function generarCampo() {
+      campo = Array.from({length: filas}, () => Array(cols).fill(0));
+      revelada = Array.from({length: filas}, () => Array(cols).fill(false));
+      totalSinMina = filas * cols - minas;
+      reveladasOK = 0;
+      juegoTerminado = false;
+      msg.textContent = "";
+
+      // Colocar minas al azar
+      let puestas = 0;
+      while (puestas < minas) {
+        const r = Math.floor(Math.random() * filas);
+        const c = Math.floor(Math.random() * cols);
+        if (campo[r][c] !== -1) {
+          campo[r][c] = -1;
+          puestas++;
+        }
+      }
+
+      // Contar minas adyacentes para cada celda no-mina
+      for (let r = 0; r < filas; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (campo[r][c] === -1) continue;
+          campo[r][c] = contarMinasVecinas(r, c);
+        }
+      }
+    }
+
+    // Cuenta minas en las 8 direcciones alrededor (r,c)
+    function contarMinasVecinas(r, c) {
+      let cont = 0;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = r + dr, nc = c + dc;
+          if (nr >= 0 && nr < filas && nc >= 0 && nc < cols) {
+            if (campo[nr][nc] === -1) cont++;
+          }
+        }
+      }
+      return cont;
+    }
+
+    // Construir tablero visual
+    function pintarTablero() {
+      tableroEl.innerHTML = "";
+      tableroEl.style.gridTemplateColumns = `repeat(${cols}, 36px)`;
+      for (let r = 0; r < filas; r++) {
+        for (let c = 0; c < cols; c++) {
+          const b = document.createElement('button');
+          b.className = 'celda';
+          b.dataset.r = r;
+          b.dataset.c = c;
+          b.addEventListener('click', () => clickCelda(r, c, b));
+          tableroEl.appendChild(b);
+        }
+      }
+    }
+
+    // Revela una celda. Si es 0, hace cascada.
+    function clickCelda(r, c, btn) {
+      if (juegoTerminado || revelada[r][c]) return;
+
+      revelada[r][c] = true;
+      btn.classList.add('revelada');
+      btn.disabled = true;
+
+      if (campo[r][c] === -1) {
+        // Mina: fin del juego. Mostrar todas las minas.
+        btn.classList.add('mina');
+        terminarPerdido();
+        return;
+      }
+
+      reveladasOK++;
+      const n = campo[r][c];
+      btn.textContent = n === 0 ? "" : n;
+
+      // Cascada: si es 0, revelar vecinas no reveladas
+      if (n === 0) {
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const nr = r + dr, nc = c + dc;
+            if (nr >= 0 && nr < filas && nc >= 0 && nc < cols) {
+              // Obtener botón vecino y revelar si procede
+              const idx = nr * cols + nc;
+              const btnVecina = tableroEl.children[idx];
+              if (!revelada[nr][nc]) clickCelda(nr, nc, btnVecina);
+            }
+          }
+        }
+      }
+
+      // ¿Victoria?
+      if (reveladasOK === totalSinMina) {
+        juegoTerminado = true;
+        msg.textContent = "🎉 ¡Has ganado!";
+        // Opcional: desactivar el resto
+        desactivarTodo();
+      }
+    }
+
+    function terminarPerdido() {
+      juegoTerminado = true;
+      msg.textContent = "💥 Boom. Has pisado una mina.";
+      // Mostrar todas las minas y desactivar
+      for (let r = 0; r < filas; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (campo[r][c] === -1) {
+            const idx = r * cols + c;
+            const b = tableroEl.children[idx];
+            b.classList.add('revelada', 'mina');
+            b.disabled = true;
+          }
+        }
+      }
+      desactivarTodo();
+    }
+
+    function desactivarTodo() {
+      Array.from(tableroEl.children).forEach(b => b.disabled = true);
+    }
+
+    // Manejar formulario
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      filas = Math.max(2, parseInt(document.getElementById('filas').value || 8));
+      cols  = Math.max(2, parseInt(document.getElementById('cols').value  || 8));
+      minas = Math.max(1, parseInt(document.getElementById('minas').value || 10));
+
+      // Validación básica: no más minas que celdas - 1
+      const maxMinas = filas * cols - 1;
+      if (minas > maxMinas) minas = maxMinas;
+
+      generarCampo();
+      pintarTablero();
+    });
+
+    // Inicial por defecto
+    generarCampo();
+    pintarTablero();
+  </script>
+</body>
+</html>
